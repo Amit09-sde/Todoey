@@ -1,40 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey_flutter/models/task.dart';
+import 'package:todoey_flutter/models/task_data.dart';
 
-class TaskTile extends StatefulWidget {
-  @override
-  State<TaskTile> createState() => _TaskTileState();
-}
+class TaskTile extends StatelessWidget {
+ 
+  final String name;
+  final bool isChecked;
+  final Function(bool?)  togglecheck;
 
-class _TaskTileState extends State<TaskTile> {
-  bool isChecked = false;
-
+  TaskTile({ required this.name, required this.isChecked, required this.togglecheck});
   
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('Task 1', style: TextStyle(decoration: isChecked? TextDecoration.lineThrough : null),),
-      trailing: TaskCheckbox(isChecked, (bool? checkboxState){
-    setState(() {
-      isChecked = checkboxState!;
-    });
-  }),
-    );
-  }
-}
-
-class TaskCheckbox extends StatelessWidget {
-
-  final isChecked ;
-  final changeCheckbox;
-  TaskCheckbox(this.isChecked, this.changeCheckbox);
- 
-  
-  @override
-  Widget build(BuildContext context) {
-    return Checkbox(
+      leading: IconButton(icon: Icon(Icons.delete), onPressed:() {
+        print(name);
+        print('je');
+        Provider.of<TaskData>(context, listen: false).removeTask(Task(name: name));
+      },),
+      title: Text(name, style: TextStyle(decoration: isChecked? TextDecoration.lineThrough : null),),
+      trailing: Checkbox(
       activeColor: Colors.lightBlueAccent,
       value: isChecked,
-      onChanged: changeCheckbox
+      onChanged:  togglecheck),
     );
   }
 }
